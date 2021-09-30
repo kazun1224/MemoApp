@@ -5,6 +5,6 @@ import MenoDetailScreen from './src/screens/MemoDetailScreen';
 
 export default function App() {
   return (
-    <MemoListScreen />
+    <MenoDetailScreen />
   );
 }
