@@ -1,15 +1,15 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, } from 'react-native';
 import { string, shape } from 'prop-types';
 
 import  Icon  from './Icon';
 
 export default function CircleButton(props) {
-  const { style, name } = props;
+  const { style, name, onPress } = props;
   return (
-    <View style={[styles.circleButton, style]}>
+    <TouchableOpacity style={[styles.circleButton, style]} onPress={onPress}>
       <Icon name={ name } size={ 24 } color='#ffffff' />
-    </View>
+    </TouchableOpacity>
   );
 }
 
