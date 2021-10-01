@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, } from 'react-native';
-import { string, shape } from 'prop-types';
+import { string, shape, func } from 'prop-types';
 
 import  Icon  from './Icon';
 
