@@ -2,9 +2,9 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import firebase from 'firebase';
-//forebaseのサンプルコード⇂
+//forebaseのサンプルコード⇂上に変更
 // import { initializeApp } from "firebase/app";
-import { firebaseConfig } from './env';
+
 
 import MemoListScreen from './src/screens/MemoListScreen';
 import MenoDetailScreen from './src/screens/MemoDetailScreen';
@@ -13,15 +13,19 @@ import MemoCreateScreen from './src/screens/MemoCreateScreen';
 import LogInScreen from './src/screens/LogInScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 
-const Stack = createStackNavigator();
 
+import { firebaseConfig } from './env';
+//firebaseのデータベースfirestoreを読み込む記述
+require('firebase/firestore');
 
 //何も初期化されていなっかたら初期化する
 if(firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
-//forebaseのサンプルコード⇂
+//forebaseのサンプルコード⇂上に変更
 // const app = initializeApp(firebaseConfig);
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
