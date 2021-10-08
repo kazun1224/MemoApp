@@ -20,7 +20,7 @@ export default function MemoListScreen(props) {
     const { currentUser } = firebase.auth();
     let unsubscribe = () => {};
     if(currentUser) {
-      const ref = db.collection(`users/${currentUser.uid}/memos`).orderBy('updatedAT','desc');
+      const ref = db.collection(`user/${currentUser.uid}/memos`).orderBy('updatedAT','desc');
       unsubscribe = ref.onSnapshot((snapshot) => {
         //カラの配列を準備
         const userMemos = [];
