@@ -1,20 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View, Text} from 'react-native';
 import CircleButton from '../components/CircleButton';
+//ファイルを参照するときindex.jsは省略できる
+import {dateToString} from '../utils';
+import { shape, string } from 'prop-types';
+import firebase from 'firebase';
 
 export default function MemoDetailScreen(props) {
-  const { navigation } = props;
+  const { navigation, route } = props;
+  const { id } = route.params;
+  console.log(id);
+  const [memo, setMemo] = useState(null);
+
+  useEffect(() => {
+    //ドキュメントの参照
+    const { currentUser } = firebase.auth();
+    let unsubscribe = () => {}
+    if(currentUser) {
+      const db = firebase.firestore();
+      const ref = db.collection(`user/${currentUser.uid}/memos`).doc(id);
+      //データを取得
+      unsubscribe = ref.onSnapshot((doc) => {
+        console.log(doc.id,doc.data());
+        const data = doc.data();
+        setMemo({
+          id: doc.id,
+          bodyText: data.bodyText,
+          updatedAT: data.updatedAT.toDate(),
+        });
+      });
+    }
+    return unsubscribe;
+  },[]);
+
   return (
     <View style={styles.container}>
       <View style={styles.memoHeader}>
-        <Text style={styles.memoTitle}>買い物リスト</Text>
-        <Text tyle={styles.memoDate}>2020年12月24日 10:00</Text>
+        <Text style={styles.memoTitle} numberOfLines={1}>{memo && memo.bodyText}</Text>
+        <Text tyle={styles.memoDate}>{memo && dateToString(memo.updatedAT)}</Text>
       </View>
       <ScrollView style={styles.memoBody}>
         <Text style={styles.memoText}>
-          買い物リスト
-          書体やレイアウトなどを確認するのに用いります
-          本文用なので使い方を間違えると不自然に見える
+          {memo && memo.bodyText}
         </Text>
       </ScrollView>
       <CircleButton
@@ -25,6 +52,12 @@ export default function MemoDetailScreen(props) {
     </View>
   );
 }
+
+MemoDetailScreen.propTypes = {
+  route: shape({
+    params: shape({ id: string }),
+  }).isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {
