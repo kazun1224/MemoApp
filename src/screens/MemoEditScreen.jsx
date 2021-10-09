@@ -1,22 +1,57 @@
-import React from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, TextInput, Alert } from 'react-native';
 import CircleButton from '../components/CircleButton';
 import KeyboardSafeView from '../components/KeyboradSafeView';
+import { shape, string } from 'prop-types';
+import firebase from 'firebase';
 
 export default function MemoEditScreen(props) {
-  const { navigation } = props;
+  const { navigation, route } = props;
+  //上でrouteを定義しMemoDetailScreenから受け割ってきたid,bodyTextを引き出す
+  const { id, bodyText } = route.params;
+  //渡ってきたメモデータを編集できるようuseStateを使う
+  //初期値に渡ってきたbodyTextにセット
+  const [body,setBody] = useState(bodyText);
+  function handlePress() {
+    const { currentUser } = firebase.auth();
+    if(currentUser) {
+      const db = firebase.firestore();
+      const ref = db.collection(`user/${currentUser.uid}/memos`).doc(id);
+      ref.set({
+        bodyText: body,
+        updatedAT: new Date(),
+      },{merge: true})
+        .then(() => {
+          navigation.goBack();
+        })
+        .catch((error) => {
+          Alert.alert(error.code);
+        });
+    }
+  }
   return (
     <KeyboardSafeView style={styles.container}>
       <View style={styles.inputContainer}>
-          <TextInput value='買い物リスト' multiline style={styles.input} />
+          <TextInput
+           value={body}
+           multiline
+           style={styles.input}
+           onChangeText={(text) => {setBody(text);}}
+          />
       </View>
       <CircleButton
         name='check'
-        onPress={() => { navigation.goBack(); }}
+        onPress={handlePress}
       />
     </KeyboardSafeView>
   );
 }
+
+MemoEditScreen.propTypes = {
+  route: shape({
+    params: shape({ id: string,bodyText:string }),
+  }).isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {

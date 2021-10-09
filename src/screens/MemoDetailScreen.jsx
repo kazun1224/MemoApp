@@ -20,6 +20,7 @@ export default function MemoDetailScreen(props) {
       const db = firebase.firestore();
       const ref = db.collection(`user/${currentUser.uid}/memos`).doc(id);
       //データを取得
+      //onsnapshotを使わないとEditscreenで更新したとき自動で反映されない
       unsubscribe = ref.onSnapshot((doc) => {
         console.log(doc.id,doc.data());
         const data = doc.data();
@@ -47,7 +48,7 @@ export default function MemoDetailScreen(props) {
       <CircleButton
         style={{ top: 60, bottom: 'auto' }}
         name='pen'
-        onPress={() =>{ navigation.navigate('MemoEdit') }}
+        onPress={() =>{ navigation.navigate('MemoEdit',{ id: memo.id,bodyText: memo.bodyText}); }}
       />
     </View>
   );

@@ -15,6 +15,7 @@ export default function MemoList(props) {
     return (
       <TouchableOpacity
         style={styles.memoListItem}
+        //('MemoDetail',{ id: item.id })でデータをMemoDetailに渡す
         onPress={() => { navigation.navigate('MemoDetail',{ id: item.id });}}
       >
         <View>
