@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
 import firebase from 'firebase';
 import Button from '../components/Button';
+import Loading from '../components/Loading';
+import { translateError } from '../utils';
 
 export default function LogInScreen(props) {
   const { navigation } = props;
   const [email, setEmail] = useState('');
-  const [password,setPassword] = useState();
+  const [password,setPassword] = useState('');
+  const [isLoading,setLoading] = useState(true);
 
   //ログイン状態を保持する記述
   useEffect(() => {
@@ -14,14 +17,18 @@ export default function LogInScreen(props) {
       if(user) {
         navigation.reset({
           index: 0,
-          routes:[{name:'MemoList'}]
+          routes:[{name: 'MemoList'}],
         });
+      } else {
+        setLoading(false);
       }
     });
     return unsubscribe;
   },[]);//useEffectをオブジェクトにすることで一回のみの処理になる
 
+  //submitを押された後の処理
   function handlePress() {
+    setLoading(true);
     //ログインの実装(.thenと.catchまではワンセット)
     firebase.auth().signInWithEmailAndPassword(email,password)
     .then((userCredential) => {
@@ -29,17 +36,21 @@ export default function LogInScreen(props) {
       console.log(user.uid);
       navigation.reset({
         index: 0,
-        routes: [{ name: 'MemoList'}],
+        routes: [{ name: 'MemoList' }],
       });
     })
     .catch((error) => {
-      Alert.alert(error.code);
+      const errorMes = translateError(error.code);
+      Alert.alert(errorMes.title, errorMes.description);
+    })
+    .then(() => {
+      setLoading(false);
     });
-
   }
 
   return (
     <View style={StyleSheet.container}>
+      <Loading isLoading={isLoading} />
       <View style={styles.inner}>
         <Text style={styles.title}>Log In</Text>
         <TextInput
@@ -54,7 +65,7 @@ export default function LogInScreen(props) {
         <TextInput
           style={styles.input}
           value={password}
-          onChangeText={(text) => { setPassword(text);}}
+          onChangeText={(text) => { setPassword(text); }}
           autoCapitalize='none'
           placeholder='Password'
           secureTextEntry
@@ -100,7 +111,7 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 16,
     height: 48,
-    color: '#DDDDDD',
+    color: '#000',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     paddingVertical: 8,

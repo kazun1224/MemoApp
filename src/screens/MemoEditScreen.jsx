@@ -5,6 +5,8 @@ import KeyboardSafeView from '../components/KeyboradSafeView';
 import { shape, string } from 'prop-types';
 import firebase from 'firebase';
 
+import { translateError } from '../utils';
+
 export default function MemoEditScreen(props) {
   const { navigation, route } = props;
   //上でrouteを定義しMemoDetailScreenから受け割ってきたid,bodyTextを引き出す
@@ -25,7 +27,8 @@ export default function MemoEditScreen(props) {
           navigation.goBack();
         })
         .catch((error) => {
-          Alert.alert(error.code);
+          const errorMes = translateError(error.code)
+          Alert.alert(errorMes.title, errorMes.description);
         });
     }
   }

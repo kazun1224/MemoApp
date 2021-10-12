@@ -3,13 +3,37 @@ import { StyleSheet, Text, View, TouchableOpacity, Alert, FlatList } from "react
 import { useNavigation } from '@react-navigation/native';
 import {dateToString} from '../utils';
 import { shape, string, instanceOf, arrayOf } from "prop-types";
-
+import firebase from "firebase";
 
 import Icon from './Icon';
 
 export default function MemoList(props) {
   const { memos } = props;
   const navigation = useNavigation();
+
+  function deleteMemo(id) {
+    const { currentUser } = firebase.auth();
+    if(currentUser) {
+      const db = firebase.firestore();
+      const ref =db.collection(`user/${currentUser.uid}/memos`).doc(id);
+      //削除する前に、一回確認を入れる処理
+      Alert.alert('メモを削除します。','よろしいですか？',[
+        {//androidは最初にネガティブを入れる
+          text: 'キャンセル',
+          onPress: () => {},
+        },
+        {
+          text:'削除する',
+          style: 'destructive',
+          onPress: () => {
+            ref.delete().catch(() => {
+              Alert.alert('削除に失敗しました。');
+            });
+          },
+        },
+      ]);
+    }
+  }
 
   function renderItem({ item }) {
     return (
@@ -24,7 +48,7 @@ export default function MemoList(props) {
         </View>
         <TouchableOpacity
           style={ styles.memoDelete}
-          onPress={() => {Alert.alert('Are you sure?');}}
+          onPress={() => {deleteMemo(item.id);}}
         >
           <Icon name='x' size={24} color='#B0B0B0' />
         </TouchableOpacity>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import firebase from 'firebase';
 import Button from '../components/Button';
+import { translateError } from '../utils';
 
 export default function SignUpScreen(props) {
   const { navigation } = props;
@@ -24,7 +25,8 @@ export default function SignUpScreen(props) {
     //  会員登録に失敗下処理
     .catch((error) => {
       console.log(error.code,error.message);
-      Alert.alert(error.code);
+      const errorMes = translateError(error.code);
+      Alert.alert(errorMes.title, errorMes.description);
     });
   }
 
@@ -35,7 +37,7 @@ export default function SignUpScreen(props) {
         <TextInput
           style={styles.input}
           value={email}
-          onChangeText={(text) => { setEmail(text );}}
+          onChangeText={(text) => { setEmail(text); }}
           autoCapitalize='none'
           keyboardType='email-address'
           placeholder='Email Address'
@@ -44,7 +46,7 @@ export default function SignUpScreen(props) {
         <TextInput
           style={styles.input}
           value={password}
-          onChangeText={(text) => { setPassword(text);}}
+          onChangeText={(text) => { setPassword(text); }}
           autoCapitalize='none'
           placeholder='Password'
           secureTextEntry
@@ -60,7 +62,7 @@ export default function SignUpScreen(props) {
             onPress={() => {
               navigation.reset({
                 index: 0,
-                routes: [{name: 'LogIn'}],
+                routes: [{name: 'LogIn' }],
               });
             }}
           >
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 16,
     height: 48,
-    color: '#DDDDDD',
+    color: '#000',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     paddingVertical: 8,
