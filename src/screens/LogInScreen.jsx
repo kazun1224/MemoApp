@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import firebase from 'firebase';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
@@ -8,44 +15,44 @@ import { translateError } from '../utils';
 export default function LogInScreen(props) {
   const { navigation } = props;
   const [email, setEmail] = useState('');
-  const [password,setPassword] = useState('');
-  const [isLoading,setLoading] = useState(true);
+  const [password, setPassword] = useState('');
+  const [isLoading, setLoading] = useState(true);
 
-  //ログイン状態を保持する記述
+  // ログイン状態を保持する記述
   useEffect(() => {
-     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      if(user) {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
         navigation.reset({
           index: 0,
-          routes:[{name: 'MemoList'}],
+          routes: [{ name: 'MemoList' }],
         });
       } else {
         setLoading(false);
       }
     });
     return unsubscribe;
-  },[]);//useEffectをオブジェクトにすることで一回のみの処理になる
+  }, []);// useEffectをオブジェクトにすることで一回のみの処理になる
 
-  //submitを押された後の処理
+  // submitを押された後の処理
   function handlePress() {
     setLoading(true);
-    //ログインの実装(.thenと.catchまではワンセット)
-    firebase.auth().signInWithEmailAndPassword(email,password)
-    .then((userCredential) => {
-      const { user } = userCredential;
-      console.log(user.uid);
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'MemoList' }],
+    // ログインの実装(.thenと.catchまではワンセット)
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(() => {// userCredential
+        // const { user } = userCredential;
+        // console.log(user.uid);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'MemoList' }],
+        });
+      })
+      .catch((error) => {
+        const errorMes = translateError(error.code);
+        Alert.alert(errorMes.title, errorMes.description);
+      })
+      .then(() => {
+        setLoading(false);
       });
-    })
-    .catch((error) => {
-      const errorMes = translateError(error.code);
-      Alert.alert(errorMes.title, errorMes.description);
-    })
-    .then(() => {
-      setLoading(false);
-    });
   }
 
   return (
@@ -56,20 +63,20 @@ export default function LogInScreen(props) {
         <TextInput
           style={styles.input}
           value={email}
-          onChangeText={(text) => { setEmail(text );}}
-          autoCapitalize='none'
-          keyboardType='email-address'
-          placeholder='Email Address'
-          textContentType='emailAddress'
+          onChangeText={(text) => { setEmail(text); }}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          placeholder="Email Address"
+          textContentType="emailAddress"
         />
         <TextInput
           style={styles.input}
           value={password}
           onChangeText={(text) => { setPassword(text); }}
-          autoCapitalize='none'
-          placeholder='Password'
+          autoCapitalize="none"
+          placeholder="Password"
           secureTextEntry
-          textContentType='password'
+          textContentType="password"
         />
         <Button
           label="Submit"
@@ -78,10 +85,10 @@ export default function LogInScreen(props) {
         <View style={styles.footer}>
           <Text style={styles.footerText}>Not registered?</Text>
           <TouchableOpacity
-            onPress={() =>{
+            onPress={() => {
               navigation.reset({
                 index: 0,
-                routes: [{name: 'SignUp'}],
+                routes: [{ name: 'SignUp' }],
               });
             }}
           >
@@ -96,7 +103,7 @@ export default function LogInScreen(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F4F8'
+    backgroundColor: '#F0F4F8',
   },
   inner: {
     paddingVertical: 24,

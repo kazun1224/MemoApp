@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import firebase from 'firebase';
 import Button from '../components/Button';
 import { translateError } from '../utils';
@@ -10,24 +17,24 @@ export default function SignUpScreen(props) {
   const [password, setPassword] = useState('');
 
   function handlePress() {
-    //ユーザー登録の処理
-    firebase.auth().createUserWithEmailAndPassword(email,password)
+    // ユーザー登録の処理
+    firebase.auth().createUserWithEmailAndPassword(email, password)
     //  会員登録に成功した処理
-    .then((userCredential) => {
-      const { user } = userCredential;
-      console.log(user.uid);
-      //画面遷移の処理
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'MemoList'}],
+      .then(() => { // userCredential
+        // const { user } = userCredential;
+        // console.log(user.uid);
+        // 画面遷移の処理
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'MemoList' }],
+        });
+      })
+      //  会員登録に失敗下処理
+      .catch((error) => {
+        // console.log(error.code, error.message);
+        const errorMes = translateError(error.code);
+        Alert.alert(errorMes.title, errorMes.description);
       });
-    })
-    //  会員登録に失敗下処理
-    .catch((error) => {
-      console.log(error.code,error.message);
-      const errorMes = translateError(error.code);
-      Alert.alert(errorMes.title, errorMes.description);
-    });
   }
 
   return (
@@ -38,19 +45,19 @@ export default function SignUpScreen(props) {
           style={styles.input}
           value={email}
           onChangeText={(text) => { setEmail(text); }}
-          autoCapitalize='none'
-          keyboardType='email-address'
-          placeholder='Email Address'
-          textContentType='emailAddress'
+          autoCapitalize="none"
+          keyboardType="email-address"
+          placeholder="Email Address"
+          textContentType="emailAddress"
         />
         <TextInput
           style={styles.input}
           value={password}
           onChangeText={(text) => { setPassword(text); }}
-          autoCapitalize='none'
-          placeholder='Password'
+          autoCapitalize="none"
+          placeholder="Password"
           secureTextEntry
-          textContentType='password'
+          textContentType="password"
         />
         <Button
           label="Submit"
@@ -62,7 +69,7 @@ export default function SignUpScreen(props) {
             onPress={() => {
               navigation.reset({
                 index: 0,
-                routes: [{name: 'LogIn' }],
+                routes: [{ name: 'LogIn' }],
               });
             }}
           >
@@ -77,7 +84,7 @@ export default function SignUpScreen(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F4F8'
+    backgroundColor: '#F0F4F8',
   },
   inner: {
     paddingVertical: 24,

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
-  Keyboard, Dimensions, Animated, ViewPropTypes,
+  Keyboard, Dimensions, Animated,
 } from 'react-native';
 import { node } from 'prop-types';
 
@@ -65,9 +65,4 @@ export default function KeyboardSafeView({ children, style }) {
 
 KeyboardSafeView.propTypes = {
   children: node.isRequired,
-  // style: ViewPropTypes.style,
-};
-
-KeyboardSafeView.defaultProps = {
-  style: null,
 };

@@ -1,10 +1,10 @@
-import React from "react";
-import { View, StyleSheet, ActivityIndicator} from 'react-native';
-import { bool } from "prop-types";
+import React from 'react';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { bool } from 'prop-types';
 
 export default function Loading(props) {
   const { isLoading } = props;
-  if(!isLoading) {
+  if (!isLoading) {
     return null;
   }
 
@@ -19,15 +19,15 @@ export default function Loading(props) {
 
 Loading.propTypes = {
   isLoading: bool,
-}
+};
 
 Loading.defaultProps = {
   isLoading: false,
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
+    position: 'absolute',
     width: '100%',
     height: '100%',
     top: 0,

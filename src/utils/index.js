@@ -1,12 +1,12 @@
 import { format } from 'date-fns';
 
 export function dateToString(date) {
-  if(!date) { return '';}
+  if (!date) { return ''; }
   return format(date, 'yyyy年M月d日 HH時mm分');
 }
 
 export function translateError(code) {
-  const error = {title: 'エラー', description: '時間をおいてお試しください'};
+  const error = { title: 'エラー', description: '時間をおいてお試しください' };
   switch (code) {
     case 'auth/invalid-email':
       error.description = 'メールアドレスが不正です。';
